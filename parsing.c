@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 21:20:04 by midbella          #+#    #+#             */
-/*   Updated: 2024/04/25 21:34:15 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/06 18:18:16 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int	check_args(int ac, char **av)
 	while (av[s_index])
 	{
 		c_index = 0;
-		while (av[c_index])
+		while (av[s_index][c_index])
 		{
-			if (!(av[c_index] >= '0' && av[c_index] <= '9'))
+			if (!(av[s_index][c_index] >= '0' && av[s_index][c_index] <= '9'))
 				return (0);
 			c_index++;
 		}
