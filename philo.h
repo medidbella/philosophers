@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/06 19:35:33 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/09 17:37:43 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,25 @@
 
 typedef struct s_philo
 {
-	pthread_t	thread;
-	int			philo_number;
-	int			fork;
+	pthread_mutex_t	mutex;
+	pthread_t		thread;
+	unsigned long	last_eat_time;
+	int				philo_number;
+	int				meals_number;
+	int				fork;
+	void			*data;
 }	t_philo;
 
 typedef struct s_data
 {
 	t_philo			*philos;
-	pthread_mutex_t	*mute;
 	int				philos_number;
 	int				life_time;
 	int				eat_time;
 	int				sleep_time;
-	int				max_eat_time;
+	int				max_eat_times;
+	int				death_flag;
+	int				t0;
 }	t_data;
 
 int	check_args(int ac, char **av);
