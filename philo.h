@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/11 17:50:56 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/13 12:53:19 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct s_philo
 {
 	pthread_mutex_t	mutex;
 	pthread_t		thread;
-	unsigned long	last_eat_time;
+	unsigned long	last_meal_time;
 	int				philo_number;
 	int				meals_number;
 	int				fork;

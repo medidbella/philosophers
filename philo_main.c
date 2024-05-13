@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:48 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/13 12:37:53 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:56:39 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,19 @@ unsigned long	ft_get_time()
 
 //make your own usleep beacause the og one is trash
 
+void	routine_meal(t_philo *eater)
+{
+	t_data	*data = eater->data;
+
+	pthread_mutex_lock(&eater->mutex);
+	printf("%lu %d has taken a fork\n", ft_get_time() - data->t0, eater->philo_number);
+	printf("%lu %d has taken a fork\n", ft_get_time() - data->t0, eater->philo_number);
+	printf("%lu %d is eating\n", ft_get_time() - data->t0, eater->philo_number);
+	usleep(data->eat_time * 1000);
+	eater->last_meal_time = ft_get_time() - data->t0;
+	pthread_mutex_unlock(&eater->mutex);
+}
+
 void	diner_start(t_philo *taker, t_philo *borrower, int odd_even)
 {
 	t_data	*data = taker->data;
@@ -29,35 +42,26 @@ void	diner_start(t_philo *taker, t_philo *borrower, int odd_even)
 	if (odd_even == 1)
 		pthread_mutex_unlock(&(data->philos[0].mutex));
 	taker->fork++;
-	borrower->data--;
-	if (odd_even == 2)
-		pthread_mutex_unlock(&(data->philos[0].mutex));
+	borrower->fork--;
+	routine_meal(taker);
+	taker->fork--;
+	borrower->fork++;
 	pthread_mutex_lock(&(data->philos[0].mutex));
 	if (odd_even == 2)
-		pthread_mutex_unlock(&(data->philos[0].mutex);
-}
-
-void	first_diner(t_philo *taker, t_philo *borrower)
-{
-	t_data	*data = taker->data;
-
-	borrower->fork--;
+		pthread_mutex_unlock(&(data->philos[0].mutex));
 	taker->fork++;
-	pthread_mutex_lock(&taker->mutex);
-	printf("%lu %d has taken a fork\n", ft_get_time() - data->t0, taker->philo_number);
-	printf("%lu %d has taken a fork\n", ft_get_time() - data->t0, taker->philo_number);
-	printf("%lu %d is eating\n", ft_get_time() - data->t0, taker->philo_number);
-	usleep(data->eat_time * 1000);
-	pthread_mutex_unlock(&taker->mutex);
+	borrower->fork--;
+	routine_meal(taker);
+	taker->fork--;
+	borrower->fork++;
 }
+
 
 void	thread_function(t_philo *ref)
 {
 	t_data	*ptr;
 
 	ptr = ref->data;
-	if (ref->philo_number % 2 == 0)
-		first_diner(ref, ref - 1);
 	while (1)
 	{
 		if (ref->philo_number % 2 != 0)
@@ -120,7 +124,7 @@ void	monitoring(t_data *ref)
 	i = 0;
 	while (1)
 	{
-		if ((ft_get_time() - ref->t0) - ref->philos[i].last_eat_time >= ref->eat_time)
+		if ((ft_get_time() - ref->t0) - ref->philos[i].last_meal_time >= ref->life_time)
 			ref->death_flag = 1;
 		i++;
 		if (i == ref->philos_number)
