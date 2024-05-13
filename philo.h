@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/09 17:37:43 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/11 17:50:56 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_data
 	int				sleep_time;
 	int				max_eat_times;
 	int				death_flag;
-	int				t0;
+	unsigned long	t0;
 }	t_data;
 
 int	check_args(int ac, char **av);
