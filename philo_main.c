@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:48 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/13 15:56:39 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/13 19:32:28 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,37 +23,12 @@ unsigned long	ft_get_time()
 
 void	routine_meal(t_philo *eater)
 {
-	t_data	*data = eater->data;
-
-	pthread_mutex_lock(&eater->mutex);
-	printf("%lu %d has taken a fork\n", ft_get_time() - data->t0, eater->philo_number);
-	printf("%lu %d has taken a fork\n", ft_get_time() - data->t0, eater->philo_number);
-	printf("%lu %d is eating\n", ft_get_time() - data->t0, eater->philo_number);
-	usleep(data->eat_time * 1000);
-	eater->last_meal_time = ft_get_time() - data->t0;
-	pthread_mutex_unlock(&eater->mutex);
+	return ;
 }
 
 void	diner_start(t_philo *taker, t_philo *borrower, int odd_even)
 {
-	t_data	*data = taker->data;
-
-	pthread_mutex_lock(&(data->philos[0].mutex));
-	if (odd_even == 1)
-		pthread_mutex_unlock(&(data->philos[0].mutex));
-	taker->fork++;
-	borrower->fork--;
-	routine_meal(taker);
-	taker->fork--;
-	borrower->fork++;
-	pthread_mutex_lock(&(data->philos[0].mutex));
-	if (odd_even == 2)
-		pthread_mutex_unlock(&(data->philos[0].mutex));
-	taker->fork++;
-	borrower->fork--;
-	routine_meal(taker);
-	taker->fork--;
-	borrower->fork++;
+	return ;
 }
 
 
@@ -92,13 +67,14 @@ void	initialize_data(t_data *ref, char **av)
 	else
 		ref->max_eat_times = -1;
 	ref->philos = malloc(sizeof(t_philo) * ref->philos_number);
+	ref->forks = malloc(sizeof(t_fork) * ref->philos_number);
 	while (i <= ref->philos_number)
 	{
-		ref->philos[i].philo_number = i + 1;
-		ref->philos[i].fork = 1;
+		ref->forks[i].fork = i + 1;
+		pthread_mutex_init(&(ref->forks[i].mute), NULL);
+		ref->philos[i].philo_number = i +1;
 		ref->philos[i].data = ref;
 		ref->philos[i].meals_number = 0;
-		pthread_mutex_init(&(ref->philos[i].mutex), NULL);
 		i++;
 	}
 }
