@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:48 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/13 19:32:28 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/15 11:29:23 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,35 +19,37 @@ unsigned long	ft_get_time()
 	return ((curr.tv_sec * 1000) + (curr.tv_usec / 1000));
 }
 
-//make your own usleep beacause the og one is trash
-
-void	routine_meal(t_philo *eater)
+void	repititve_meal(t_philo *ref)
 {
-	return ;
+	ref->
 }
-
-void	diner_start(t_philo *taker, t_philo *borrower, int odd_even)
-{
-	return ;
-}
-
 
 void	thread_function(t_philo *ref)
 {
 	t_data	*ptr;
 
 	ptr = ref->data;
+	if (ref->philo_number % 2 == 0)
+		usleep(2);
 	while (1)
 	{
-		if (ref->philo_number % 2 != 0)
-		{
-			if (ptr->philos_number == ref->philo_number)
-				diner_start(ref, ptr->philos, 1);
-			else
-				diner_start(ref, ref + 1, 1);
-		}
-		else 
-			diner_start(ref, ref - 1, 2);
+		repititve_meal(ref);
+	}
+}
+
+void	initialize_philos_forks(t_data *ref)
+{
+	int	r_fork_index;
+	int	iter;
+
+	iter = 1;
+	ref->philos[iter].l_fork = &ref->forks[0];
+	ref->philos[iter].r_fork = &ref->forks[ref->philos_number - 1];
+	while (iter < ref->philos_number - 1)
+	{
+		ref->philos[iter].l_fork = &ref->forks[iter];
+		ref->philos[iter].r_fork = &ref->forks[iter - 1];
+		iter++;
 	}
 }
 
@@ -71,7 +73,7 @@ void	initialize_data(t_data *ref, char **av)
 	while (i <= ref->philos_number)
 	{
 		ref->forks[i].fork = i + 1;
-		pthread_mutex_init(&(ref->forks[i].mute), NULL);
+		pthread_mutex_init(&(ref->forks[i].mutex), NULL);
 		ref->philos[i].philo_number = i +1;
 		ref->philos[i].data = ref;
 		ref->philos[i].meals_number = 0;

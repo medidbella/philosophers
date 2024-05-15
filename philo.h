@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/13 21:03:07 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/14 16:22:47 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
-//it turns out that not evry philo has his own fork but the subject
+//it turns out that not every philo has his own fork but the subject
 //only says that each philo has a fork on his left and right side and
 //there are as many forks as the number of philosofers 
 typedef struct s_fork
 {
 	int				fork;
-	pthread_mutex_t	mute;
+	pthread_mutex_t	mutex;
 }	t_fork;
 
 typedef struct s_philo
