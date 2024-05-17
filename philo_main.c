@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:48 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/15 11:29:23 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/17 17:42:49 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,38 @@ unsigned long	ft_get_time()
 	return ((curr.tv_sec * 1000) + (curr.tv_usec / 1000));
 }
 
+void	message_printer(t_philo *ref)
+{
+	pthread_mutex_lock(&ref->data->print_guard);
+	printf("%lu %d has taken a fork\n", ft_get_time() - ref->data->t0, ref->philo_number);
+	printf("%lu %d has taken a fork\n", ft_get_time() - ref->data->t0, ref->philo_number);
+	printf("%lu %d is eating\n", ft_get_time() - ref->data->t0, ref->philo_number);
+	pthread_mutex_unlock(&ref->data->print_guard);
+}
 void	repititve_meal(t_philo *ref)
 {
-	ref->
+	pthread_mutex_lock(ref->l_fork);
+	pthread_mutex_lock(ref->r_fork);
+	message_printer(ref);
+	usleep(ref->data->eat_time * 1000); 
+	pthread_mutex_unlock(ref->r_fork);
+	pthread_mutex_unlock(ref->l_fork);
 }
 
 void	thread_function(t_philo *ref)
 {
-	t_data	*ptr;
-
-	ptr = ref->data;
 	if (ref->philo_number % 2 == 0)
 		usleep(2);
 	while (1)
 	{
 		repititve_meal(ref);
+		pthread_mutex_lock(&ref->data->print_guard);
+		printf("%lu %d is sleeping\n", ft_get_time() - ref->data->t0, ref->philo_number);
+		pthread_mutex_unlock(&ref->data->print_guard);
+		usleep(ref->data->sleep_time);
+		pthread_mutex_lock(&ref->data->print_guard);
+		printf("%lu %d is thinking\n", ft_get_time() - ref->data->t0, ref->philo_number);
+		pthread_mutex_unlock(&ref->data->print_guard);
 	}
 }
 
@@ -68,12 +85,12 @@ void	initialize_data(t_data *ref, char **av)
 		ref->max_eat_times = ft_atoi(av[5]);
 	else
 		ref->max_eat_times = -1;
+	pthread_mutex_init(&ref->print_guard, NULL);
 	ref->philos = malloc(sizeof(t_philo) * ref->philos_number);
-	ref->forks = malloc(sizeof(t_fork) * ref->philos_number);
+	ref->forks = malloc(sizeof(pthread_mutex_t) * ref->philos_number);
 	while (i <= ref->philos_number)
 	{
-		ref->forks[i].fork = i + 1;
-		pthread_mutex_init(&(ref->forks[i].mutex), NULL);
+		pthread_mutex_init((ref->philos[i].l_fork), NULL);
 		ref->philos[i].philo_number = i +1;
 		ref->philos[i].data = ref;
 		ref->philos[i].meals_number = 0;
@@ -133,11 +150,9 @@ int	main(int ac, char **av)
 	if (!check_args(ac, av))
 		return (1);
 	initialize_data(&prog_data, av);
-	printf("philo nb = %d\nlife_time = %d\neat_time = %d\nsleep_time = %d\n",
-		prog_data.philos_number, prog_data.life_time, prog_data.eat_time, prog_data.sleep_time);
 	start_threads(&prog_data, prog_data.philos_number);
-	//pthread_create(&monitor, NULL, monitoring, &prog_data);
-	//pthread_detach(monitor);
+	pthread_create(&monitor, NULL, monitoring, &prog_data);
+	pthread_detach(monitor);
 	while (1)
 	{
 		if (did_all_phlios_eat(&prog_data))

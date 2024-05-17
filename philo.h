@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/14 16:22:47 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/17 16:58:32 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
-//it turns out that not every philo has his own fork but the subject
-//only says that each philo has a fork on his left and right side and
-//there are as many forks as the number of philosofers 
-typedef struct s_fork
-{
-	int				fork;
-	pthread_mutex_t	mutex;
-}	t_fork;
 
 typedef struct s_philo
 {
@@ -33,9 +25,9 @@ typedef struct s_philo
 	unsigned long	last_meal_time;
 	int				philo_number;
 	int				meals_number;
-	t_fork			*r_fork;
-	t_fork			*l_fork;
-	void			*data;
+	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*l_fork;
+	t_data			*data;
 }	t_philo;
 
 typedef struct s_data
@@ -47,7 +39,8 @@ typedef struct s_data
 	int				sleep_time;
 	int				max_eat_times;
 	int				death_flag;
-	t_fork			*forks;
+	pthread_mutex_t	print_guard;
+	pthread_mutex_t	*forks;
 	unsigned long	t0;
 }	t_data;
 
