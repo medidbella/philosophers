@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/17 16:58:32 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/18 18:43:14 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <unistd.h>
 # include <sys/time.h>
 
+typedef struct s_data t_data;
+
 typedef struct s_philo
 {
 	pthread_t		thread;
@@ -27,6 +29,7 @@ typedef struct s_philo
 	int				meals_number;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	death_lock;
 	t_data			*data;
 }	t_philo;
 
