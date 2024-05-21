@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/18 18:43:14 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/21 12:17:36 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 
-typedef struct s_data t_data;
+typedef struct s_data	t_data;
 
 typedef struct s_philo
 {
@@ -29,7 +29,6 @@ typedef struct s_philo
 	int				meals_number;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
-	pthread_mutex_t	death_lock;
 	t_data			*data;
 }	t_philo;
 
@@ -47,7 +46,15 @@ typedef struct s_data
 	unsigned long	t0;
 }	t_data;
 
-int	check_args(int ac, char **av);
-int	ft_atoi(char *str);
+int				check_args(int ac, char **av);
+int				ft_atoi(char *str);
+int				start_threads(t_data *data, int size);
+void			initialize_data(t_data *ref, char **av, int ac);
+void			initialize_philos_forks(t_data *ref);
+void			thread_function(t_philo *ref);
+int				check_args(int ac, char **av);
+void			ft_sleep(unsigned long time);
+unsigned long	ft_get_time(void);
+int				ft_atoi(char *str);
 
 #endif

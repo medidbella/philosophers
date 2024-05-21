@@ -1,1 +1,0 @@
- cc philo_main.c parsing.c extra_functoins.c

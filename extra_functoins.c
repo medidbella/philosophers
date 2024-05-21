@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 21:04:54 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/17 18:34:13 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/18 20:48:16 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,45 @@ int	ft_atoi(char *str)
 		i++;
 	}
 	return (result * sign);
+}
+
+unsigned long	ft_get_time(void)
+{
+	struct timeval	curr;
+
+	gettimeofday(&curr, NULL);
+	return ((curr.tv_sec * 1000) + (curr.tv_usec / 1000));
+}
+
+void	ft_sleep(unsigned long time)
+{
+	unsigned long	start;
+
+	start = ft_get_time();
+	while (ft_get_time() - start < time)
+		usleep(1);
+	return ;
+}
+
+int	check_args(int ac, char **av)
+{
+	int	s_index;
+	int	c_index;
+
+	s_index = 1;
+	c_index = 0;
+	if (ac < 5 || ac > 6)
+		return (0);
+	while (av[s_index])
+	{
+		c_index = 0;
+		while (av[s_index][c_index])
+		{
+			if (!(av[s_index][c_index] >= '0' && av[s_index][c_index] <= '9'))
+				return (0);
+			c_index++;
+		}
+		s_index++;
+	}
+	return (1);
 }
