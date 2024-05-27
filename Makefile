@@ -1,10 +1,10 @@
 NAME = philo
 FILES = philo_main.c before_simulatoin.c extra_functoins.c
 OBJ_FILES = $(FILES:.c=.o)
-C_flags =  -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror 
 
 $(NAME): $(OBJ_FILES)
-	cc $(C_flags) $(OBJ_FILES) -o $(NAME)
+	cc $(CFLAGS) $(OBJ_FILES) -o $(NAME)
 
 all:$(NAME)
 

@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 21:04:54 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/18 20:48:16 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/27 19:05:51 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	ft_sleep(unsigned long time)
 
 	start = ft_get_time();
 	while (ft_get_time() - start < time)
-		usleep(1);
+		ft_sleep(1);
 	return ;
 }
 

@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:45:52 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/21 13:14:56 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/27 20:26:56 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	initialize_philos_forks(t_data *ref)
 {
-	int	r_fork_index;
 	int	iter;
 
 	iter = 1;
@@ -61,24 +60,30 @@ void	initialize_data(t_data *ref, char **av, int ac)
 
 int	start_threads(t_data *data, int size)
 {
-	int	guard;
-	int	i;
+	int			i;
+	pthread_t	monitor;
 
 	i = 0;
 	while (i < size)
 	{
-		guard = pthread_create(&(data->philos[i].thread), NULL,
-				(void *(*)(void *))thread_function, &data->philos[i]);
-		if (guard != 0)
+		if (pthread_create(&(data->philos[i].thread), NULL,
+				(void *)thread_function, &data->philos[i]))
+			return (1);
+		if (pthread_detach(data->philos[i].thread))
 			return (1);
 		i++;
 	}
-	i--;
-	while (i)
-	{
-		guard = pthread_detach(data->philos[i--].thread);
-		if (guard != 0)
-			return (1);
-	}
+	if (pthread_create(&monitor, NULL, (void *)monitoring, data) != 0)
+		return (1);
+	if (pthread_detach(monitor) != 0)
+		return (1);
 	return (0);
+}
+
+void	print_message(char *str, t_data *data, int id)
+{
+	pthread_mutex_lock(&data->print_guard);
+	if (data->status != 1)
+		printf(str, ft_get_time() - data->t0, id);
+	pthread_mutex_unlock(&data->print_guard);
 }

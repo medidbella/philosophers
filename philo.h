@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/21 12:17:36 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/27 19:03:33 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_data
 	int				sleep_time;
 	int				max_eat_times;
 	int				death_flag;
+	int				status;
 	pthread_mutex_t	print_guard;
 	pthread_mutex_t	*forks;
 	unsigned long	t0;
@@ -56,5 +57,8 @@ int				check_args(int ac, char **av);
 void			ft_sleep(unsigned long time);
 unsigned long	ft_get_time(void);
 int				ft_atoi(char *str);
+void			print_message(char *str, t_data *data, int id);
+void			ft_sleep(unsigned long time);
+void			monitoring(t_data *ref);
 
 #endif
