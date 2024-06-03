@@ -6,84 +6,72 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 20:45:52 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/27 20:26:56 by midbella         ###   ########.fr       */
+/*   Updated: 2024/06/01 13:32:59 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	initialize_philos_forks(t_data *ref)
+void	initialize_philos(t_data *ref)
 {
 	int	iter;
 
-	iter = 1;
-	ref->philos[0].last_meal_time = ref->t0;
-	ref->philos[0].l_fork = &ref->forks[0];
-	ref->philos[0].r_fork = &ref->forks[ref->philos_number - 1];
+	iter = 0;
 	while (iter < ref->philos_number)
 	{
-		ref->philos[iter].last_meal_time = ref->t0;
+		if (iter == 0)
+			ref->philos[iter].r_fork = &ref->forks[ref->philos_number - 1];
+		else
+			ref->philos[iter].r_fork = &ref->forks[iter - 1];
 		ref->philos[iter].l_fork = &ref->forks[iter];
-		ref->philos[iter].r_fork = &ref->forks[iter - 1];
+		ref->philos[iter].last_meal_time = ref->t0;
+		ref->philos[iter].philo_number = iter + 1;
+		pthread_mutex_init(&ref->forks[iter], NULL);
+		ref->philos[iter].data = ref;
+		ref->philos[iter].meals_number = 0;
 		iter++;
 	}
 }
 
-void	initialize_data(t_data *ref, char **av, int ac)
+int	initialize_data(t_data *ref, char **av, int ac)
 {
-	int	i;
-
-	i = 0;
+	ref->max_eat_times = -1;
 	ref->t0 = ft_get_time();
 	ref->philos_number = ft_atoi(av[1]);
 	ref->life_time = ft_atoi(av[2]);
 	ref->eat_time = ft_atoi(av[3]);
 	ref->sleep_time = ft_atoi(av[4]);
-	ref->death_flag = -1;
+	ref->status = 0;
 	if (ac == 6)
 		ref->max_eat_times = ft_atoi(av[5]);
-	else
-		ref->max_eat_times = -1;
 	pthread_mutex_init(&ref->print_guard, NULL);
 	ref->philos = malloc(sizeof(t_philo) * ref->philos_number);
 	ref->forks = malloc(sizeof(pthread_mutex_t) * ref->philos_number);
-	initialize_philos_forks(ref);
-	while (i < ref->philos_number)
-	{
-		pthread_mutex_init(&ref->forks[i], NULL);
-		ref->philos[i].philo_number = i + 1;
-		ref->philos[i].data = ref;
-		ref->philos[i].meals_number = 0;
-		i++;
-	}
-}
-
-int	start_threads(t_data *data, int size)
-{
-	int			i;
-	pthread_t	monitor;
-
-	i = 0;
-	while (i < size)
-	{
-		if (pthread_create(&(data->philos[i].thread), NULL,
-				(void *)thread_function, &data->philos[i]))
-			return (1);
-		if (pthread_detach(data->philos[i].thread))
-			return (1);
-		i++;
-	}
-	if (pthread_create(&monitor, NULL, (void *)monitoring, data) != 0)
+	if (!ref->philos || !ref->forks)
 		return (1);
-	if (pthread_detach(monitor) != 0)
-		return (1);
+	initialize_philos(ref);
 	return (0);
 }
 
-void	print_message(char *str, t_data *data, int id)
+int	check_args(int ac, char **av)
 {
-	pthread_mutex_lock(&data->print_guard);
-	if (data->status != 1)
-		printf(str, ft_get_time() - data->t0, id);
-	pthread_mutex_unlock(&data->print_guard);
+	int	s_index;
+	int	c_index;
+
+	s_index = 1;
+	c_index = 0;
+	if (ac < 5 || ac > 6)
+		return (0);
+	while (av[s_index])
+	{
+		c_index = 0;
+		while (av[s_index][c_index])
+		{
+			if (!(av[s_index][c_index] >= '0' && av[s_index][c_index] <= '9'))
+				return (0);
+			c_index++;
+		}
+		s_index++;
+	}
+	return (1);
 }

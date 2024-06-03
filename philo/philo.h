@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 20:50:44 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/27 19:03:33 by midbella         ###   ########.fr       */
+/*   Updated: 2024/06/01 12:17:47 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <stdlib.h>
+# include <string.h>
 # include <unistd.h>
 # include <sys/time.h>
 
@@ -36,11 +37,10 @@ typedef struct s_data
 {
 	t_philo			*philos;
 	int				philos_number;
-	int				life_time;
+	unsigned long	life_time;
 	int				eat_time;
 	int				sleep_time;
 	int				max_eat_times;
-	int				death_flag;
 	int				status;
 	pthread_mutex_t	print_guard;
 	pthread_mutex_t	*forks;
@@ -49,16 +49,17 @@ typedef struct s_data
 
 int				check_args(int ac, char **av);
 int				ft_atoi(char *str);
-int				start_threads(t_data *data, int size);
-void			initialize_data(t_data *ref, char **av, int ac);
-void			initialize_philos_forks(t_data *ref);
+int				initialize_data(t_data *ref, char **av, int ac);
+void			initialize_philos(t_data *ref);
 void			thread_function(t_philo *ref);
 int				check_args(int ac, char **av);
 void			ft_sleep(unsigned long time);
 unsigned long	ft_get_time(void);
 int				ft_atoi(char *str);
+void			destroy_mutexes(t_data *ref);
 void			print_message(char *str, t_data *data, int id);
-void			ft_sleep(unsigned long time);
-void			monitoring(t_data *ref);
+int				did_all_phlios_eat(t_data *ref);
+void			my_increment(int *val);
+void			set_variable(unsigned long	*dest, unsigned long valeu);
 
 #endif

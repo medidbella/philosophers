@@ -6,7 +6,7 @@
 /*   By: midbella <midbella@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 21:04:54 by midbella          #+#    #+#             */
-/*   Updated: 2024/05/27 19:05:51 by midbella         ###   ########.fr       */
+/*   Updated: 2024/05/30 18:42:06 by midbella         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,29 +52,22 @@ void	ft_sleep(unsigned long time)
 
 	start = ft_get_time();
 	while (ft_get_time() - start < time)
-		ft_sleep(1);
+		usleep(1);
 	return ;
 }
 
-int	check_args(int ac, char **av)
+int	did_all_phlios_eat(t_data *ref)
 {
-	int	s_index;
-	int	c_index;
+	int	i;
 
-	s_index = 1;
-	c_index = 0;
-	if (ac < 5 || ac > 6)
+	i = 0;
+	if (ref->max_eat_times == -1)
 		return (0);
-	while (av[s_index])
+	while (i < ref->philos_number)
 	{
-		c_index = 0;
-		while (av[s_index][c_index])
-		{
-			if (!(av[s_index][c_index] >= '0' && av[s_index][c_index] <= '9'))
-				return (0);
-			c_index++;
-		}
-		s_index++;
+		if (ref->philos[i].meals_number < ref->max_eat_times)
+			return (0);
+		i++;
 	}
 	return (1);
 }
